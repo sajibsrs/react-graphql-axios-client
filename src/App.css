@@ -1,5 +1,66 @@
+body {
+  background-color: rgb(34, 34, 51);
+  color: rgb(103, 248, 158);
+}
+
 .App {
   text-align: center;
+}
+
+.App h1 {
+  color: #595981;
+}
+
+.App ul li {
+  list-style: none;
+  /* background-color: #282c34; */
+  padding: 2px 0;
+  margin: 6px auto;
+}
+
+.App a {
+  color: rgb(103, 248, 158);
+  text-decoration: none;
+}
+
+.App form {
+  margin-bottom: 2.5rem;
+}
+
+.App form label {
+  display: block;
+  margin-bottom: 20px;
+  color: rgb(102, 52, 196);
+}
+
+.App input {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 100px;
+  margin-right: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #595981;
+}
+
+.App input:focus-visible {
+  border: none;
+  outline: none;
+}
+
+.App button {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 100px;
+  font-size: 1rem;
+  color: rgb(223, 208, 252);
+  cursor: pointer;
+  background-color: rgb(102, 52, 196);
+}
+
+.App button:hover {
+  color: rgb(190, 160, 245);
+  background-color: rgb(90, 47, 168);
 }
 
 .App-logo {

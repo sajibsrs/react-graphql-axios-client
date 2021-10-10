@@ -1,6 +1,8 @@
 import './App.css';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import SearchForm from './components/SearchForm';
+import RepositoryList from './components/RepositoryList';
 
 const axiosGithubGraphQL = axios.create({
   baseURL: 'https://api.github.com/graphql',
@@ -9,11 +11,11 @@ const axiosGithubGraphQL = axios.create({
   }
 });
 
-const GET_REPOSITORIES = `
+const githubRepoQuery = (username, limit = 100) => `
   {
-    user (login: "sajibsrs") {
+    user (login: "${username}") {
       email
-      repositories(first: 100) {
+      repositories(first: ${limit}) {
         nodes{
           nameWithOwner
           url
@@ -26,27 +28,34 @@ function App() {
   const [data, setData] = useState({ repositories: null, errors: null });
   const [loading, setLoading] = useState(true);
   const [input, setInput] = useState(null);
+  const [submit, setSubmit] = useState("");
 
   useEffect(() => {
-    onFetchFromGithub();
-  }, []);
-
-  console.log(input);
+    if (!submit) {
+      setLoading(false);
+      return;
+    };
+    setLoading(true);
+    onFetchFromGithub(submit);
+  }, [submit]);
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(`Searched username: ${input}`)
+    setSubmit(input);
   };
 
-  const onFetchFromGithub = () => {
+  const handleInput = event => {
+    setInput(event.target.value);
+  }
+
+  const onFetchFromGithub = (username) => {
     axiosGithubGraphQL
-      .post('', { query: GET_REPOSITORIES })
+      .post('', { query: githubRepoQuery(username) })
       .then(result => {
         setLoading(false);
-        // console.log(result.data);
         setData({
-          repositories: result.data.data.user.repositories.nodes,
-          errors: result,
+          repositories: !result.data.errors ? result.data.data.user.repositories.nodes : null,
+          errors: result.data.errors ? result.data.errors : null,
         })
       });
   };
@@ -54,22 +63,8 @@ function App() {
   return (
     <div className="App">
       <h1>Github GraphQL API</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">
-          Search repositories by Github username: {input}
-        </label>
-        <br />
-        <br />
-        <input id="username" type="text" onChange={e => setInput(e.target.value)} style={{ width: '300px' }} />
-        <button type="submit">Search</button>
-      </form>
-      {loading ? <p>loading...</p> :
-        <ul>
-          {data.repositories && data.repositories.map((k, i) =>
-            <li key={i}><a href={k.url}>{k.nameWithOwner}</a></li>
-          )}
-        </ul>
-      }
+      <SearchForm input={input} handleInput={handleInput} handleSubmit={handleSubmit} />
+      {loading ? <p>loading...</p> : <RepositoryList data={data} />}
     </div>
   );
 }

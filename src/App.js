@@ -16,6 +16,7 @@ const GET_REPOSITORIES = `
       repositories(first: 100) {
         nodes{
           nameWithOwner
+          url
         }
       }
     }
@@ -30,14 +31,19 @@ function App() {
     onFetchFromGithub();
   }, []);
 
-  const submit = event => event.preventDefault();
+  console.log(input);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    console.log(`Searched username: ${input}`)
+  };
 
   const onFetchFromGithub = () => {
     axiosGithubGraphQL
       .post('', { query: GET_REPOSITORIES })
       .then(result => {
         setLoading(false);
-        console.log(result.data);
+        // console.log(result.data);
         setData({
           repositories: result.data.data.user.repositories.nodes,
           errors: result,
@@ -48,17 +54,19 @@ function App() {
   return (
     <div className="App">
       <h1>Github GraphQL API</h1>
-      <form onSubmit={submit}>
-        <label htmlFor="url">
-          Show repositories for username
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">
+          Search repositories by Github username: {input}
         </label>
-        <input id="url" type="text" onChange={setInput} style={{ width: '300px' }} />
+        <br />
+        <br />
+        <input id="username" type="text" onChange={e => setInput(e.target.value)} style={{ width: '300px' }} />
         <button type="submit">Search</button>
       </form>
       {loading ? <p>loading...</p> :
         <ul>
           {data.repositories && data.repositories.map((k, i) =>
-            <li key={i}>{k.nameWithOwner}</li>
+            <li key={i}><a href={k.url}>{k.nameWithOwner}</a></li>
           )}
         </ul>
       }

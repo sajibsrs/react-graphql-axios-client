@@ -10,16 +10,16 @@ const axiosGithubGraphQL = axios.create({
 });
 
 const GET_REPOSITORIES = `
-    {
-      user (login: "sajibsrs") {
-        email
-        repositories(first: 100) {
-          nodes{
-            nameWithOwner
-          }
+  {
+    user (login: "sajibsrs") {
+      email
+      repositories(first: 100) {
+        nodes{
+          nameWithOwner
         }
       }
-    }`;
+    }
+  }`;
 
 function App() {
   const [data, setData] = useState({ repositories: null, errors: null });
@@ -56,9 +56,11 @@ function App() {
         <button type="submit">Search</button>
       </form>
       {loading ? <p>loading...</p> :
-        <div>
-          {data.repositories && data.repositories.map((k, i) => <p key={i}>{k.nameWithOwner}</p>)}
-        </div>
+        <ul>
+          {data.repositories && data.repositories.map((k, i) =>
+            <li key={i}>{k.nameWithOwner}</li>
+          )}
+        </ul>
       }
     </div>
   );

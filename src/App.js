@@ -63,7 +63,7 @@ function App() {
   return (
     <div className="App">
       <h1>Github GraphQL API</h1>
-      <SearchForm input={input} handleInput={handleInput} handleSubmit={handleSubmit} />
+      <SearchForm input={input} onChange={handleInput} onSubmit={handleSubmit} />
       {loading ? <p>loading...</p> : <RepositoryList data={data} />}
     </div>
   );

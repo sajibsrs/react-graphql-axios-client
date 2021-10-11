@@ -37,4 +37,4 @@ A react application that uses *Axios* as *GraphQL* client to fetch data from Git
    ```shell
    npm start
    ```
-   This will launch the application on a new browser window at http://localhost.3000
+   This will launch the application on a new browser window at http://localhost:3000
